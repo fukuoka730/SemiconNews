@@ -144,8 +144,7 @@ def _apply_column_widths(ws):
 
 
 def _build_filename(year, month):
-    fy = year - 2000 if month >= 4 else year - 2001
-    return f"FY{fy:02d}-MarketNews-{year}{month:02d}.xlsx"
+    return f"MarketNews-{year}{month:02d}.xlsx"
 
 
 if __name__ == "__main__":

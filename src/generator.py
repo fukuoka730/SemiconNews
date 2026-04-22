@@ -102,6 +102,8 @@ def _write_data(ws, articles):
     center    = Alignment(horizontal="center", vertical="center")
     left_wrap = Alignment(horizontal="left", vertical="center", wrap_text=True)
     tag_font  = Font(bold=True, color=COLOR_TAG_VAL, size=9)
+    link_font = Font(color="0563C1", underline="single", size=10)
+    plain_font = Font(size=10)
     even_fill = PatternFill("solid", fgColor=COLOR_EVEN_ROW)
 
     for i, article in enumerate(articles):
@@ -109,6 +111,12 @@ def _write_data(ws, articles):
         fill = even_fill if i % 2 == 0 else PatternFill()
 
         cell = ws.cell(row=row, column=1, value=article["title"])
+        url = article.get("url", "")
+        if url:
+            cell.hyperlink = url
+            cell.font = link_font
+        else:
+            cell.font = plain_font
         cell.alignment = left_wrap
         cell.border    = border
         cell.fill      = fill

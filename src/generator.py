@@ -42,6 +42,7 @@ def generate_excel(articles: list[dict], year: int, month: int) -> str:
     _write_data(ws, articles)
     _apply_column_widths(ws)
     ws.freeze_panes = "C3"
+    ws.sheet_view.showGridLines = False
 
     filename = _build_filename(year, month)
     path = os.path.join(OUTPUT_DIR, filename)
@@ -54,9 +55,9 @@ def _write_header(ws):
     thin = Side(style="thin", color="CCCCCC")
     border = Border(left=thin, right=thin, top=thin, bottom=thin)
     header_fill = PatternFill("solid", fgColor=COLOR_HEADER_BG)
-    header_font = Font(bold=True, color=COLOR_HEADER_FG, size=9)
+    header_font = Font(bold=True, color=COLOR_HEADER_FG, size=9, name="游ゴシック")
     sub_fill    = PatternFill("solid", fgColor=COLOR_SUB_BG)
-    sub_font    = Font(bold=True, size=8)
+    sub_font    = Font(bold=True, size=8, name="游ゴシック")
     center_wrap = Alignment(horizontal="center", vertical="center", wrap_text=True)
 
     for group_name, col_start, col_end in HEADER_GROUPS:
@@ -101,9 +102,9 @@ def _write_data(ws, articles):
     border = Border(left=thin, right=thin, top=thin, bottom=thin)
     center    = Alignment(horizontal="center", vertical="center")
     left_wrap = Alignment(horizontal="left", vertical="center", wrap_text=True)
-    tag_font  = Font(bold=True, color=COLOR_TAG_VAL, size=9)
-    link_font = Font(color="0563C1", underline="single", size=10)
-    plain_font = Font(size=10)
+    tag_font  = Font(bold=True, color=COLOR_TAG_VAL, size=9, name="游ゴシック")
+    link_font = Font(color="0563C1", underline="single", size=10, name="游ゴシック")
+    plain_font = Font(size=10, name="游ゴシック")
     even_fill = PatternFill("solid", fgColor=COLOR_EVEN_ROW)
 
     for i, article in enumerate(articles):

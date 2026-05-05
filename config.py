@@ -48,8 +48,8 @@ RSS_FEEDS = [
         "name": "Google News - 半導体設備投資",
     },
     {
-        "url": "https://news.google.com/rss/search?q=TSMC+%E7%86%8A%E6%9C%AC+%E5%8D%8A%E5%B0%8E%E4%BD%93&hl=ja&gl=JP&ceid=JP:ja",
-        "name": "Google News - TSMC熊本",
+        "url": "https://news.google.com/rss/search?q=Rapidus&hl=ja&gl=JP&ceid=JP:ja",
+        "name": "Google News - Rapidus",
     },
 ]
 

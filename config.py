@@ -48,8 +48,8 @@ RSS_FEEDS = [
         "name": "Google News - 半導体設備投資",
     },
     {
-        "url": "https://news.google.com/rss/search?q=Rapidus&hl=ja&gl=JP&ceid=JP:ja",
-        "name": "Google News - Rapidus",
+        "url": "https://news.google.com/rss/search?q=%E5%8D%8A%E5%B0%8E%E4%BD%93+%E6%A4%9C%E6%9F%BB&hl=ja&gl=JP&ceid=JP:ja",
+        "name": "Google News - 半導体検査",
     },
 ]
 

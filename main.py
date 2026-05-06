@@ -60,7 +60,7 @@ def main():
     path = generate_excel(classified, year, month)
 
     logger.info(f"=== 完了: {path} ===")
-    print(f"\n✓ 出力ファイル: {path}")
+    print(f"\n出力ファイル: {path}")
     print(f"  記事数: {len(classified)}件")
 
 

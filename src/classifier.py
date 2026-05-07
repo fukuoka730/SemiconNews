@@ -1,6 +1,6 @@
 """
 Google Gemini APIを使って記事タイトルをカテゴリ分類するモジュール
-無料枠: 1,500リクエスト/日、15回/分 (gemini-1.5-flash)
+無料枠: 1,000リクエスト/日、15回/分 (gemini-2.5-flash-lite)
 """
 import json
 import logging
@@ -62,7 +62,7 @@ def _classify_one(client: genai.Client, title: str) -> dict[str, Any]:
 
     try:
         response = client.models.generate_content(
-            model="gemini-2.0-flash-lite",
+            model="gemini-2.5-flash-lite",
             contents=f"記事タイトル: {title}",
             config=types.GenerateContentConfig(
                 system_instruction=_SYSTEM_PROMPT,

@@ -58,19 +58,25 @@ _TOPIC_RULES: dict[str, list[str]] = {
     "memory": [
         "DRAM", "NAND", "HBM", "フラッシュメモリ", "メモリ半導体",
         "SKハイニックス", "SK Hynix", "マイクロン", "Micron", "メモリ市況",
-        "DDR5",
+        "DDR", "LPDDR", "GDDR", "3D NAND", "NORフラッシュ","MRAM","ReRAM", "次世代メモリ", 
+        "不揮発性メモリ","サンディスク","SanDisk","KIOXIA","キオクシア","FeRAM",
     ],
     "sensor": [
         "イメージセンサー", "CMOSセンサー", "LiDAR", "ToFセンサー",
-        "ソニーセミコン",
+        "ソニーセミコン", "ソニーセミコンダクタ", "Sony Semiconductor", "CIS",
+        "センサー半導体", "車載センサー", 
     ],
     "3dic_chiplet": [
         "チップレット", "3D IC", "CoWoS", "先端パッケージ", "インターポーザ",
-        "SoIC", "ウェーハボンディング",
+        "SoIC", "ウェーハボンディング", "ファンアウト", "FOPLP", "2.5D", "3Dスタック",
+        "EMIB", "InFO", "InFO_oS", "InFO_SoW", "InFO_WLP",
     ],
     "fpd_solar": [
         "液晶", "有機EL", "OLED", "太陽電池", "ペロブスカイト", "ディスプレイ",
-        "FPD", "マイクロLED",
+        "FPD", "マイクロLED","次世代ディスプレイ","LCD","AMOLED","QLED",
+        "LTPS", "IGZO", "JDI", "Japan Display", "ジャパンディスプレイ",
+        "シャープディスプレイ","太陽光", "ソーラーパネル", "HTPS", "HMD", "ヘッドマウントディスプレイ",
+        "フレキシブル", "ポリシリコン"
     ],
     "material": [
         "フォトレジスト", "レジスト", "特殊ガス", "CMP材料", "絶縁膜",
@@ -87,7 +93,7 @@ _TOPIC_RULES: dict[str, list[str]] = {
     "production_equipment": [
         "製造装置", "半導体装置", "露光装置", "ASML", "東京エレクトロン", "アドバンテスト",
         "Advantest", "ラムリサーチ", "Lam Research", "KLA", "CVD装置",
-        "エッチング装置", "検査装置", "設備投資", "TEL",
+        "エッチング", "検査装置", "設備投資", "TEL",
         "Photo electron Soul",
     ],
     "infrastructure": [

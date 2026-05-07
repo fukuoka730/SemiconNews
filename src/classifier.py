@@ -3,6 +3,7 @@
 キーワードマッチングによる分類。negative/positive は必ずどちらか一方を付与する。
 """
 import logging
+import unicodedata
 from typing import Any
 
 from config import CATEGORIES
@@ -36,12 +37,13 @@ _TOPIC_RULES: dict[str, list[str]] = {
     "gov_project": [
         "NEDO", "JST", "経産省", "経済産業省", "補助金", "国家プロジェクト", "国プロ",
         "政府支援", "公的資金", "助成金", "文科省", "内閣府", "LSTC",
-        "次世代半導体等小委員会", "次世代半導体",
+        "次世代半導体等小委員会", "次世代半導体", "ラピダス",
     ],
     "tariff": [
         "関税", "輸出規制", "輸出管理", "CHIPS法", "制裁", "禁輸", "EAR",
         "Entity List", "安全保障", "経済安保", "BIS", "出荷停止命令",
         "出荷停止", "対中規制", "米中規制", "対中", "輸出禁止",
+        "機密漏洩", "技術流出", "スパイ",
     ],
     "pwr_ic_ev": [
         "パワー半導体", "SiC", "GaN", "電気自動車", "インバーター", "IGBT",
@@ -55,7 +57,8 @@ _TOPIC_RULES: dict[str, list[str]] = {
     ],
     "qt_optical": [
         "量子コンピュータ", "量子技術", "光電融合", "シリコンフォトニクス",
-        "フォトニクス", "量子通信", "量子暗号","SiPh", "量子センサー",
+        "フォトニクス", "量子通信", "量子暗号", "SiPh", "量子センサー",
+        "光半導体",
     ],
     "memory": [
         "DRAM", "NAND", "HBM", "フラッシュメモリ", "メモリ半導体",
@@ -84,6 +87,7 @@ _TOPIC_RULES: dict[str, list[str]] = {
         "フォトレジスト", "レジスト", "特殊ガス", "CMP材料", "絶縁膜",
         "半導体材料", "シリコンウェーハ", "フォトマスク", "研磨材",
         "化合物半導体", "エッチングガス", "成膜材料",
+        "有機半導体", "リードフレーム",
     ],
     "eco_sgds": [
         "カーボンニュートラル", "SDGs", "省エネ", "ESG", "脱炭素",
@@ -97,7 +101,8 @@ _TOPIC_RULES: dict[str, list[str]] = {
     "production_equipment": [
         "製造装置", "半導体装置", "露光装置", "ASML", "東京エレクトロン", "アドバンテスト",
         "Advantest", "ラムリサーチ", "Lam Research", "KLA", "CVD装置",
-        "エッチング", "検査装置", "設備投資", "TEL","研磨装置", "成膜装置", "洗浄装置",
+        "エッチング", "検査装置", "設備投資", "TEL", "研磨装置", "成膜装置", "洗浄装置",
+        "半導体検査", "計測装置", "計測機器", "堀場製作所", "HORIBA",
         "Photo electron Soul",
     ],
     "infrastructure": [
@@ -106,7 +111,7 @@ _TOPIC_RULES: dict[str, list[str]] = {
     ],
     "consortium": [
         "M&A", "買収", "合併", "アライアンス", "資本提携", "合弁設立",
-        "企業統合", "共同出資", "出資合意",
+        "企業統合", "共同出資", "出資合意", "出資",
     ],
     "education": [
         "大学", "産学連携", "人材育成プログラム", "共同研究", "論文発表",
@@ -124,7 +129,8 @@ _TOPIC_RULES: dict[str, list[str]] = {
 
 
 def _contains(text: str, keyword: str) -> bool:
-    return keyword.lower() in text.lower()
+    # NFKC正規化で全角英数字（ＡＩ→AI、ＮＶＩＤＩＡ→NVIDIA）を半角に統一
+    return unicodedata.normalize("NFKC", keyword).lower() in unicodedata.normalize("NFKC", text).lower()
 
 
 def _classify_one(title: str) -> dict[str, Any]:

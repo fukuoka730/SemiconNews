@@ -7,36 +7,51 @@
 
 ## 処理手順
 
-### Step 1: 対象月を決定
-
-```python
-from datetime import date
-from dateutil.relativedelta import relativedelta
-target = date.today().replace(day=1) - relativedelta(months=1)
-print(target.year, target.month)
-```
-
-### Step 2: 依存ライブラリのインストール
+### Step 1: 依存ライブラリのインストール
 
 ```bash
-pip install openpyxl python-dateutil -q
+pip install openpyxl python-dateutil feedparser -q
 ```
 
-### Step 3: 記事収集（WebSearch使用）
+### Step 2: レポート生成
 
-WebSearchで以下3クエリを検索し、各クエリから10件ずつ、計30件を収集する。
+前月分を自動生成（毎月1日実行時）:
 
-1. `半導体 市場 {year}年{month}月`
-2. `AI 半導体 投資 {year}年{month}月`
-3. `半導体 業績 決算 {year}年{month}月`
+```bash
+python main.py
+```
 
-**日付フィルタ**: 対象月（`{year}-{month:02d}`）に公開された記事のみを含める。対象月外・日付不明は除外する。
+特定月を指定する場合:
 
-### Step 4: 記事分類とJSON保存
+```bash
+python main.py {year} {month}
+```
 
-全記事を一括で分類し、`data/classified_{year}{month:02d}.json` に保存する。
+例: `python main.py 2026 4`
 
-**カテゴリ定義（23種）:**
+スクリプトが以下を自動実行する:
+1. **RSS収集**: 10件のRSSフィードから対象月の記事を収集
+2. **ルールベース分類**: キーワードマッチングで23カテゴリに分類（API不要）
+3. **Excel生成**: `output/MarketNews-{year}{month:02d}.xlsx` を出力
+
+### Step 3: GitHubにpush
+
+```bash
+git config user.email "claude-agent@anthropic.com"
+git config user.name "Claude Agent"
+git remote set-url origin https://fukuoka730:{PAT}@github.com/fukuoka730/SemiconNews.git
+git add output/
+git commit -m "[Auto] {year}/{month:02d} 半導体市場ニュースレポート ({件数}件)"
+git push origin main
+```
+
+### Step 4: 完了確認
+
+記事数、生成ファイル名、push成否を報告する。
+
+---
+
+## カテゴリ定義（23種）
 
 | キー | 説明 |
 |---|---|
@@ -69,49 +84,12 @@ WebSearchで以下3クエリを検索し、各クエリから10件ずつ、計30
 - 他は該当するものをすべて選択
 - `other` は他カテゴリが全く当てはまらない場合のみ
 
-**JSON形式**（トークン節約のため `true` のカテゴリのみ記載）:
-```json
-[
-  {
-    "title": "記事タイトル",
-    "date": "2026-04-15",
-    "url": "https://...",
-    "source": "WebSearch",
-    "categories": {
-      "positive": true,
-      "ai": true,
-      "stock_earnings": true
-    }
-  }
-]
-```
+---
 
-### Step 5: Excel生成
+## Excel仕様
 
-```bash
-mkdir -p data
-python src/generator.py {year} {month}
-```
-
-出力ファイル: `output/MarketNews-{year}{month:02d}.xlsx`
-
-**Excel仕様:**
 - フォント: 游ゴシック
 - グリッド線: OFF
 - Title列: 記事URLへのハイパーリンク
 - ウィンドウ枠の固定: C3
-
-### Step 6: GitHubにpush
-
-```bash
-git config user.email "claude-agent@anthropic.com"
-git config user.name "Claude Agent"
-git remote set-url origin https://fukuoka730:{PAT}@github.com/fukuoka730/SemiconNews.git
-git add output/
-git commit -m "[Auto] {year}/{month:02d} 半導体市場ニュースレポート"
-git push origin main
-```
-
-### Step 7: 完了確認
-
-記事数、生成ファイル名、push成否を報告する。
+- 出力先: `output/MarketNews-{year}{month:02d}.xlsx`

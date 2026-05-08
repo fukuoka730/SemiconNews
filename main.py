@@ -9,8 +9,6 @@ import sys
 import logging
 from datetime import datetime
 
-from config import GEMINI_API_KEY
-
 logging.basicConfig(
     level=logging.INFO,
     format="%(asctime)s [%(levelname)s] %(message)s",
@@ -32,11 +30,6 @@ def main():
 
     logger.info(f"=== 処理開始: {year}年{month:02d}月 ===")
 
-    # APIキーチェック
-    if not GEMINI_API_KEY:
-        logger.error("GEMINI_API_KEY が設定されていません。.env ファイルを確認してください。")
-        sys.exit(1)
-
     # Step 1: 記事収集
     logger.info("--- Step 1: RSS収集 ---")
     from src.collector import collect_articles
@@ -48,8 +41,8 @@ def main():
 
     logger.info(f"収集完了: {len(articles)}件")
 
-    # Step 2: AI分類
-    logger.info("--- Step 2: Claude API分類 ---")
+    # Step 2: ルールベース分類
+    logger.info("--- Step 2: ルールベース分類 ---")
     from src.classifier import classify_articles
     classified = classify_articles(articles)
     logger.info(f"分類完了: {len(classified)}件")

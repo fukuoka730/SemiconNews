@@ -100,23 +100,32 @@ git push origin main
 
 ### 実行環境
 
-クラウドのリモートエージェントが週次で `py weekly.py`（ローカルでは `python weekly.py`）を実行する。
-SMTP認証情報と宛先は **環境変数** で渡す（`.env` はクラウドに届かないため）。
+ローカルのWindowsタスクスケジューラで毎週月曜 8:00 に `weekly.py` を実行する。
+登録は `setup_weekly_scheduler.ps1`、実行ラッパーは `run_weekly.bat`（ログは `run_weekly.log`）。
+SMTP認証情報と宛先は ローカルの `.env` に記載する（`load_dotenv()` が環境変数へ読み込む）。
 
 | 環境変数 | 説明 |
 |---|---|
 | SMTP_HOST | SMTPサーバホスト |
 | SMTP_PORT | ポート（既定587） |
 | SMTP_USER | 認証ユーザ |
-| SMTP_PASS | 認証パスワード |
+| SMTP_PASS | 認証パスワード（Gmailの場合はアプリパスワード） |
 | SMTP_FROM | 送信元アドレス |
 | SMTP_TLS | starttls(既定)/ssl/none |
 | MAIL_TO | 宛先（カンマ区切りで複数可） |
 
 ### 処理手順
 
+手動実行:
+
 ```bash
 python weekly.py
+```
+
+スケジューラ登録（毎週月曜 8:00）:
+
+```powershell
+.\setup_weekly_scheduler.ps1
 ```
 
 スクリプトが以下を自動実行する:

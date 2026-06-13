@@ -93,7 +93,7 @@ HEADER_GROUPS = [
 
 
 # ---- 週刊メール (SMTP) 設定 ----
-# 値は環境変数から都度読む（ローカルは .env、クラウドはエージェントの環境変数）。
+# 値は環境変数から都度読む（ローカルの .env を load_dotenv() で読み込む）。
 def load_mail_config() -> dict:
     """SMTP送信に必要な設定を環境変数から読み込んで返す。"""
     return {

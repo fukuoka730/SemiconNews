@@ -4,3 +4,4 @@ __pycache__/
 data/
 preview.json
 run.log
+run_weekly.log

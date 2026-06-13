@@ -14,12 +14,8 @@ from config import RSS_FEEDS
 logger = logging.getLogger(__name__)
 
 
-def collect_articles(year: int, month: int) -> list[dict]:
-    """指定した年月のニュース記事をRSSから収集する。"""
-    start = datetime(year, month, 1, tzinfo=timezone.utc)
-    last_day = monthrange(year, month)[1]
-    end = datetime(year, month, last_day, 23, 59, 59, tzinfo=timezone.utc)
-
+def collect_articles_between(start: datetime, end: datetime) -> list[dict]:
+    """指定期間 [start, end] のニュース記事をRSSから収集する。"""
     articles = []
     seen: set[str] = set()
 
@@ -31,6 +27,14 @@ def collect_articles(year: int, month: int) -> list[dict]:
     articles.sort(key=lambda a: a["date"], reverse=True)
     logger.info(f"合計: {len(articles)}件収集")
     return articles
+
+
+def collect_articles(year: int, month: int) -> list[dict]:
+    """指定した年月のニュース記事をRSSから収集する。"""
+    start = datetime(year, month, 1, tzinfo=timezone.utc)
+    last_day = monthrange(year, month)[1]
+    end = datetime(year, month, last_day, 23, 59, 59, tzinfo=timezone.utc)
+    return collect_articles_between(start, end)
 
 
 def _fetch_feed(feed_config, start, end, seen):

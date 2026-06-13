@@ -93,3 +93,36 @@ git push origin main
 - Title列: 記事URLへのハイパーリンク
 - ウィンドウ枠の固定: C3
 - 出力先: `output/MarketNews-{year}{month:02d}.xlsx`
+
+---
+
+## 週刊メール発行（月次とは独立）
+
+### 実行環境
+
+クラウドのリモートエージェントが週次で `py weekly.py`（ローカルでは `python weekly.py`）を実行する。
+SMTP認証情報と宛先は **環境変数** で渡す（`.env` はクラウドに届かないため）。
+
+| 環境変数 | 説明 |
+|---|---|
+| SMTP_HOST | SMTPサーバホスト |
+| SMTP_PORT | ポート（既定587） |
+| SMTP_USER | 認証ユーザ |
+| SMTP_PASS | 認証パスワード |
+| SMTP_FROM | 送信元アドレス |
+| SMTP_TLS | starttls(既定)/ssl/none |
+| MAIL_TO | 宛先（カンマ区切りで複数可） |
+
+### 処理手順
+
+```bash
+python weekly.py
+```
+
+スクリプトが以下を自動実行する:
+1. **RSS収集**: 直近7日間の記事を収集（`collect_articles_between`）
+2. **ルールベース分類**: 既存の23カテゴリ分類を再利用
+3. **HTML生成**: ダイジェスト本文を組み立て
+4. **メール送信**: 汎用SMTPでHTMLメールを配信
+
+対象記事が0件の週は送信をスキップして正常終了する。

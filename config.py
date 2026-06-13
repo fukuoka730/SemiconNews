@@ -90,3 +90,18 @@ HEADER_GROUPS = [
     ("企業連合・教育・人材",  21, 23),
     ("企業動向",            24, 25),
 ]
+
+
+# ---- 週刊メール (SMTP) 設定 ----
+# 値は環境変数から都度読む（ローカルは .env、クラウドはエージェントの環境変数）。
+def load_mail_config() -> dict:
+    """SMTP送信に必要な設定を環境変数から読み込んで返す。"""
+    return {
+        "host": os.environ.get("SMTP_HOST", ""),
+        "port": int(os.environ.get("SMTP_PORT", "587")),
+        "user": os.environ.get("SMTP_USER", ""),
+        "password": os.environ.get("SMTP_PASS", ""),
+        "sender": os.environ.get("SMTP_FROM", ""),
+        "tls": os.environ.get("SMTP_TLS", "starttls"),  # starttls / ssl / none
+        "to": [a.strip() for a in os.environ.get("MAIL_TO", "").split(",") if a.strip()],
+    }

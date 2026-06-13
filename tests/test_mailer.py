@@ -28,9 +28,10 @@ def test_send_builds_and_sends_message(monkeypatch):
     sent = {}
 
     class FakeSMTP:
-        def __init__(self, host, port):
+        def __init__(self, host, port, timeout=None):
             sent["host"] = host
             sent["port"] = port
+            sent["timeout"] = timeout
 
         def starttls(self):
             sent["starttls"] = True
@@ -50,6 +51,7 @@ def test_send_builds_and_sends_message(monkeypatch):
 
     assert sent["host"] == "smtp.test"
     assert sent["port"] == 587
+    assert sent["timeout"] == 30
     assert sent["starttls"] is True
     assert sent["login"] == ("u", "p")
     assert sent["quit"] is True
@@ -59,3 +61,15 @@ def test_send_builds_and_sends_message(monkeypatch):
     assert msg["From"] == "from@test"
     assert msg["To"] == "to@test"
     assert msg.get_content_type() == "text/html"
+
+
+def test_send_rejects_invalid_tls(monkeypatch):
+    monkeypatch.setenv("SMTP_HOST", "smtp.test")
+    monkeypatch.setenv("SMTP_PORT", "587")
+    monkeypatch.setenv("SMTP_USER", "u")
+    monkeypatch.setenv("SMTP_PASS", "p")
+    monkeypatch.setenv("SMTP_FROM", "from@test")
+    monkeypatch.setenv("MAIL_TO", "to@test")
+    monkeypatch.setenv("SMTP_TLS", "bogus")
+    with pytest.raises(ValueError):
+        mailer.send("件名", "<p>本文</p>")

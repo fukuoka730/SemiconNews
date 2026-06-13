@@ -1,4 +1,5 @@
 """分類済み記事リストから週刊ダイジェストのHTML本文を組み立てるモジュール。"""
+import html
 from datetime import datetime
 
 from config import CATEGORIES
@@ -42,10 +43,10 @@ def _topic_labels(article: dict) -> str:
 
 
 def _render_article(article: dict) -> str:
-    title = article.get("title", "")
-    url = article.get("url", "")
-    date = article.get("date", "")
-    source = article.get("source", "")
+    title = html.escape(article.get("title", ""))
+    url = html.escape(article.get("url", ""), quote=True)
+    date = html.escape(article.get("date", ""))
+    source = html.escape(article.get("source", ""))
 
     link = f'<a href="{url}">{title}</a>' if url else title
     topics = _topic_labels(article)

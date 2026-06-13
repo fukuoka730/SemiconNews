@@ -8,6 +8,7 @@ from config import load_mail_config
 logger = logging.getLogger(__name__)
 
 _REQUIRED = ("host", "port", "user", "password", "sender", "to")
+_SMTP_TIMEOUT = 30  # 秒。応答のないサーバで無限待機しないため
 
 
 def send(subject: str, html_body: str) -> None:
@@ -16,6 +17,9 @@ def send(subject: str, html_body: str) -> None:
     missing = [k for k in _REQUIRED if not cfg.get(k)]
     if missing:
         raise RuntimeError(f"SMTP設定が不足しています: {', '.join(missing)}")
+
+    if cfg["tls"] not in ("starttls", "ssl", "none"):
+        raise ValueError(f"SMTP_TLS の値が不正です: {cfg['tls']!r}（starttls/ssl/none）")
 
     msg = MIMEText(html_body, "html", "utf-8")
     msg["Subject"] = subject
@@ -28,9 +32,9 @@ def send(subject: str, html_body: str) -> None:
 
 def _send_smtp(cfg: dict, msg: MIMEText) -> None:
     if cfg["tls"] == "ssl":
-        server = smtplib.SMTP_SSL(cfg["host"], cfg["port"])
+        server = smtplib.SMTP_SSL(cfg["host"], cfg["port"], timeout=_SMTP_TIMEOUT)
     else:
-        server = smtplib.SMTP(cfg["host"], cfg["port"])
+        server = smtplib.SMTP(cfg["host"], cfg["port"], timeout=_SMTP_TIMEOUT)
     try:
         if cfg["tls"] == "starttls":
             server.starttls()
